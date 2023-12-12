@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 
 public class DBUtil {
@@ -22,7 +25,7 @@ public class DBUtil {
 	// ============================================
 	
 	StringBuilder sb = new StringBuilder();
-	
+	Scanner scan = new Scanner(System.in);
 	
 	
 	
@@ -101,11 +104,27 @@ public class DBUtil {
 		return AddrList;
 	}
 		
-	public void updateAddress(int id, String name, String address, String phone, String company, String grade, String part) {
+	public void updateAddress() {
 		// ================== DB 작업 ======================
 		try {
-			stmt = conn.createStatement();
 			
+			System.out.print("id : ");
+			int id = scan.nextInt();
+			scan.nextLine();
+			System.out.print("이름 : ");
+			String name = scan.nextLine();
+			System.out.println("주소 : ");
+			String address = scan.nextLine();
+			System.out.println("전화번호 : ");
+			String phone = scan.nextLine();
+			System.out.println("회사 : ");
+			String company = scan.nextLine();
+			System.out.println("직급 : ");
+			String grade = scan.nextLine();
+			System.out.println("부서 : ");
+			String part = scan.nextLine();
+			
+			stmt = conn.createStatement();
 			String sql = "UPDATE phone SET phone_name = '" + name + "', phone_ADDRESS = '" + address + "', phone_NUMBER = '" + phone + "', phone_COMPANY = '" + company + "', phone_GRADE = '" + grade + "', phone_PART = '" + part + "' WHERE phone_ID = " + id;
 		
 			stmt.executeUpdate(sql);
@@ -117,13 +136,56 @@ public class DBUtil {
 		// =================================================
 	}
 	
-	public void deleteAddress(int id) {
+	public void updateAddress(int id) {
+		// ================== DB 작업 ======================
+		try {
+			System.out.println("[ 입력하신 정보로 수정됩니다. ]");
+			System.out.print("이름 : ");
+			String name = scan.nextLine();
+			System.out.println("주소 : ");
+			String address = scan.nextLine();
+			System.out.println("전화번호 : ");
+			String phone = scan.nextLine();
+			System.out.println("회사 : ");
+			String company = scan.nextLine();
+			System.out.println("직급 : ");
+			String grade = scan.nextLine();
+			System.out.println("부서 : ");
+			String part = scan.nextLine();
+			
+			stmt = conn.createStatement();
+			String sql = "UPDATE phone SET phone_name = '" + name + "', phone_ADDRESS = '" + address + "', phone_NUMBER = '" + phone + "', phone_COMPANY = '" + company + "', phone_GRADE = '" + grade + "', phone_PART = '" + part + "' WHERE phone_ID = " + id;
+		
+			stmt.executeUpdate(sql);
+			System.out.println("주소록 수정 완료");
+		} catch (Exception e) {
+			System.out.println("DB작업중 문제 발생: " + e.getMessage());
+			e.printStackTrace();
+		}
+		// =================================================
+	}
+	
+	public void deleteAddress() {
 		// =================================================
 		try {
+			
+			System.out.println("삭제할 id를 공백으로 구분하여 모두 입력해주세요. (ex. 1 2 3)");
+			String num = scan.nextLine();
+			String[] deletenum = num.split(" ");		// 삭제할 id를 배열에 담음
+			
 			stmt = conn.createStatement();
+			sb.delete(0, sb.length());
+			sb.append("DELETE FROM phone WHERE ");
 			
-			String sql = "DELETE FROM phone WHERE phone_ID = " + id;
-			
+			for (int i=0; i<deletenum.length; i++) {
+				sb.append("phone_ID = " + deletenum[i]);
+				if (i != deletenum.length -1) {
+					sb.append(" OR ");
+				} else {
+					sb.append(";");
+				}
+			}
+			String sql = sb.toString();
 			stmt.executeUpdate(sql);
 			System.out.println("주소록 삭제 완료");
 		} catch (Exception e) {
@@ -132,6 +194,22 @@ public class DBUtil {
 		}
 		// =================================================
 	}
+	
+	
+	public void deleteAddress(int id) {
+		// =================================================
+		try {
+			stmt = conn.createStatement();
+			String sql = ("DELETE FROM phone WHERE phone_ID = " + id + ";");
+			stmt.executeUpdate(sql);
+			System.out.println("주소록 삭제 완료");
+		} catch (Exception e) {
+			System.out.println("DB작업중 문제 발생: " + e.getMessage());
+			e.printStackTrace();
+		}
+		// =================================================
+	}
+	
 		
 	public ArrayList<Addr> searchAddress(ArrayList<Addr> addrList, ArrayList<String> searchList ) {
 		// =================================================
@@ -174,33 +252,7 @@ public class DBUtil {
 		// =================================================
 	}
 	
-	
-	public void deleteAddress(ArrayList<Addr> addrList, String[] deletenum) {
-		// =================================================
-		try {
-			stmt = conn.createStatement();
-			sb.delete(0, sb.length());
-			sb.append("DELETE FROM phone WHERE ");
-			
-			for (int i=0; i<deletenum.length; i++) {
-				sb.append("phone_ID = " + deletenum[i]);
-				if (i != deletenum.length -1) {
-					sb.append(" OR ");
-				} else {
-					sb.append(";");
-				}
-			}
-			String sql = sb.toString();
-			stmt.executeUpdate(sql);
-			System.out.println("주소록 삭제 완료");
-		} catch (Exception e) {
-			System.out.println("DB작업중 문제 발생: " + e.getMessage());
-			e.printStackTrace();
-		}
-		// =================================================
-	}
-	
-	
+
 	
 	
 }

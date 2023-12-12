@@ -10,14 +10,15 @@ public class AddrApp {
 		Scanner scan = new Scanner(System.in);
 		
 		String prompt1 = """
-				===================================================
+				==================================================
 				=						 =
 				=		1. 전화번호 추가하기			 =
 				=		2. 전화번호 수정하기			 =
 				=		3. 전화번호 삭제하기			 =
-				=		4. 전체 목록 조회하기			 =
-				=		5. 전화번호 검색하기			 =
+				=		4. 전화번호 검색하기			 =
+				=		5. 전체 목록 조회하기		 =
 				=						 =
+				=		9. csv 파일 생성		 =
 				=		0. 프로그램 종료			 =
 				=						 =
 				==================================================
@@ -86,55 +87,18 @@ public class AddrApp {
 			
 			else if (cmd.equals("2")) {		// update
 				System.out.println("=============== 주소록 수정 ===============");
-				System.out.print("id : ");
-				int id = scan.nextInt();
-				scan.nextLine();
-				System.out.print("이름 : ");
-				String name = scan.nextLine();
-				System.out.println("주소 : ");
-				String address = scan.nextLine();
-				System.out.println("전화번호 : ");
-				String phone = scan.nextLine();
-				System.out.println("회사 : ");
-				String company = scan.nextLine();
-				System.out.println("직급 : ");
-				String grade = scan.nextLine();
-				System.out.println("부서 : ");
-				String part = scan.nextLine();
-				
-				db.updateAddress(id, name, address, phone, company, grade, part);
-				
-				System.out.println("주소록 수정 완료");
+				db.updateAddress();
 				System.out.println("----------------------------------------");
 			}
 			
 			
 			else if (cmd.equals("3")) {		// delete
 				System.out.println("=============== 주소록 삭제 ===============");
-				System.out.print("id : ");
-				int id = scan.nextInt();
-				scan.nextLine();
-				
-				db.deleteAddress(id);
-				
-				System.out.println("주소록 삭제 완료");
+				db.deleteAddress();
 				System.out.println("----------------------------------------");
 			}
 			
-			else if (cmd.equals("4")) {			// show
-				ArrayList<Addr> addrList = db.getAddress();
-	
-				// 모바일에서 출력
-//				MobileView mv = new MovileView();
-//				mv.printAddr(addrList);
-				
-				// 웹에서 출력
-				WebView mv2 = new WebView();
-				mv2.printAddr(addrList);
-//				System.out.println(addrList);
-			}
-			
-			else if (cmd.equals("5")) {		// search
+			else if (cmd.equals("4")) {		// search
 				ArrayList<Addr> addrList = new ArrayList<>();
 				ArrayList<String> searchList = new ArrayList<>();
 				
@@ -150,7 +114,9 @@ public class AddrApp {
 					WebView mv2 = new WebView();	// 웹에서 출력
 					mv2.printAddr(addrList);
 					
-					System.out.println("주소록 조회 완료");
+					int searchNum = addrList.size();
+					
+					System.out.printf("조회된 주소록은 총 %d개입니다.\n", searchNum);
 					System.out.println(prompt2);
 					int answer2 = scan.nextInt();
 					scan.nextLine();
@@ -158,30 +124,72 @@ public class AddrApp {
 					if (answer2 == 0) {	// 처음으로
 						System.out.println("처음으로 돌아갑니다.");
 						break; 
+						
 					} else if (answer2 == 2) {	// 전체검색
 						searchList.clear();
+						
 					} else if (answer2 == 3) {	// 수정
+						if (searchNum == 1) {	// 검색결과가 1개뿐이면 바로 수정
+							db.updateAddress(addrList.get(0).getId());
+						} else {				// 검색결과가 여러개면 id 입력값 받아서 하나만 수정
+							db.updateAddress();
+						}
 						
 					} else if (answer2 == 4) {	// 삭제
 						
-						System.out.println("삭제할 id를 공백으로 구분하여 모두 입력해주세요. (ex. 1 2 3)");
-						String num = scan.nextLine();
-						String[] deletenum = num.split(" ");		// 삭제할 id를 배열에 담음
-						db.deleteAddress(addrList, deletenum);
-						System.out.println("처음으로 돌아갑니다.");
-						break;
-						
-					} else if (answer2 == 5) {	// 모두삭제
-
+						if (searchNum == 1) {	// 검색결과가 한개뿐이면 바로삭제
+							db.deleteAddress(addrList.get(0).getId());
+							break;
+						} else {				// 검색결과가 여러개면 id 입력값 받아서 삭제
+							db.deleteAddress();	
+							System.out.println("처음으로 돌아갑니다.");
+							break;
+						}
 					}
-					
-					
-					
-					
-					
-					
 				} while (true);	// 결과 내 재검색
 			}
+			
+			else if (cmd.equals("5")) {			// show
+				ArrayList<Addr> addrList = db.getAddress();
+	
+				// 모바일에서 출력
+//				MobileView mv = new MovileView();
+//				mv.printAddr(addrList);
+				
+				// 웹에서 출력
+				WebView mv2 = new WebView();
+				mv2.printAddr(addrList);
+//				System.out.println(addrList);
+				int searchNum = addrList.size();
+				
+				System.out.printf("조회된 주소록은 총 %d개입니다.\n", searchNum);
+				
+			}
+			
+			
+			else if (cmd.equals("9")) {			// csv 파일 생성
+				
+//				ArrayList<Addr> addrList = db.getAddress();
+//				DBtocsv filemaker = new DBtocsv();
+//				filemaker.makeCSV(addrList);
+				
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+			else {
+				System.out.println("다시 입력하세요.");
+			}
+			
+			
+			
+			
+			
 		}
 	}
 }
