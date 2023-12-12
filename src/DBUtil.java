@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -227,7 +225,7 @@ public class DBUtil {
 				}
 			}
 
-			String sql = sb.toString();
+			String sql = sb.toString();		// 쿼리문 완성하여 날리기
 			rs = stmt.executeQuery(sql);
 			
 			while (rs.next()) {
@@ -240,7 +238,7 @@ public class DBUtil {
 				String part = rs.getString("phone_PART");
 				
 				Addr a1 = new Addr(id, name, address, phone, company, grade, part);
-				addrList.add(a1);
+				addrList.add(a1);			// addrList에 검색결과 받아오기
 			}
 			
 		} catch (Exception e) {
@@ -253,19 +251,82 @@ public class DBUtil {
 	}
 	
 
+	public ArrayList<Addr> sortAddress(ArrayList<Addr> addrList, int sortNum) {
+		String sql;
+		
+		switch(sortNum) {
+			case (1):		// id 정렬
+				break;
+				
+			case (2):		// 이름 정렬
+				sql = "select * from phone ORDER BY phone_NAME;";
+				addrList = returnAddrList(sql);
+				break;
+			
+			case (3):		// 주소 정렬
+				sql = "select * from phone ORDER BY phone_ADDRESS;";
+				addrList = returnAddrList(sql);
+				break;
+			
+			case (4):		// 전화번호 정렬
+				sql = "select * from phone ORDER BY phone_NUMBER;";
+				addrList = returnAddrList(sql);
+				break;
+			
+			case (5):		// 회사 정렬
+				sql = "select * from phone ORDER BY phone_COMPANY;";
+				addrList = returnAddrList(sql);
+				break;
+			
+			case (6):		// 직급 정렬
+				sql = "select * from phone ORDER BY phone_GRADE;";
+				addrList = returnAddrList(sql);
+				break;
+			
+			case (7):		// 부서 정렬
+				sql = "select * from phone ORDER BY phone_PART;";
+				addrList = returnAddrList(sql);
+				break;
+			
+		}
+		return addrList;
+		
+	}
+	
+	// sql문 넘겨주면 검색 후 addrList 반환하는 메서드. sortAddress에서 각 스위치문에 사용하려고 만듦
+	public ArrayList<Addr> returnAddrList(String sql) {
+		ArrayList<Addr> AddrList = new ArrayList<>();
+	
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			System.out.println("============== 주소록 목록 ===============");
+			while (rs.next()) {
+				int id = rs.getInt("phone_ID");
+				String name = rs.getString("phone_NAME");
+				String address = rs.getString("phone_ADDRESS");
+				String phone = rs.getString("phone_NUMBER");
+				String company = rs.getString("phone_COMPANY");
+				String grade = rs.getString("phone_GRADE");
+				String part = rs.getString("phone_PART");
+				
+				Addr a1 = new Addr(id, name, address, phone, company, grade, part);
+				AddrList.add(a1);
+			}
+		} catch (Exception e) {
+			System.out.println("list DB 작업 중 문제 발생!");
+			e.printStackTrace();
+		}
+		return AddrList;
+	
+	}
 	
 	
 }
 
 
 
-
-
-
-
-
-
-
-
+//231212 10:32 편집
 
 

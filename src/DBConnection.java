@@ -18,3 +18,6 @@ public class DBConnection {
 //		System.out.println(AddList);
 	}
 }
+
+
+// 231212 10:32 편집

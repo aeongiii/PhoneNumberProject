@@ -16,13 +16,13 @@ public class AddrApp {
 				=		2. 전화번호 수정하기			 =
 				=		3. 전화번호 삭제하기			 =
 				=		4. 전화번호 검색하기			 =
-				=		5. 전체 목록 조회하기		 =
+				=		5. 전체 목록 조회하기	 	 =
 				=						 =
-				=		9. csv 파일 생성		 =
+				=		9. csv 파일 생성		 	 =
 				=		0. 프로그램 종료			 =
 				=						 =
 				==================================================
-				
+				 ❤=͟͟͞͞  번호를 입력하세요. > 
 				""";
 		
 		String prompt2 = """
@@ -30,34 +30,33 @@ public class AddrApp {
 				=						 =
 				=		1. 결과 내 재검색		 	 =
 				=		2. 전체 검색		 	 =
-				=
-				=		3. 수정		 	 =
+				=						 =
+				=		3. 선택수정		 	 =
 				=		4. 선택삭제		 	 =
-				=		5. 모두삭제		 	 =
 				=						 =
 				=		0. 처음으로 돌아가기			 =
 				=						 =
 				==================================================
-				
+				 ❤=͟͟͞͞  번호를 입력하세요. > 
 				""";
 		
 		String prompt3 = """
-				================= 정렬기준을 선택해주세요 ==============
+				=================================================
 				=						 =
-				=		1. id 정렬 			 =
+				=		1. id 정렬(기본정렬) 		 =
 				=		2. 이름 정렬 		 	 =
 				=		3. 주소 정렬 		 	 =
 				=		4. 전화번호 정렬 		 	 =
-				=		5. 그룹별 정렬 		 	 =
-				=						 =
-				=		0. 처음으로 돌아가기			 =
+				=		5. 회사 정렬 		 	 =
+				=		6. 직급 정렬 		 	 =
+				=		7. 부서 정렬 		 	 =
 				=						 =
 				==================================================
+				 ❤=͟͟͞͞  정렬기준을 선택하세요. > 
 				""";
 		
 		while (true) {
 			System.out.println(prompt1);
-			System.out.println("명령어를 입력해주세요. : ");
 			String cmd = scan.nextLine();
 			
 			if (cmd.equals("0")) {		// exit
@@ -104,13 +103,18 @@ public class AddrApp {
 				
 				do {
 					addrList.clear();	// 초기화해줘야함
-					System.out.println("=============== 전화번호 조회 ===============");
+					System.out.println("=================== 전화번호 검색창 ==================");
 					System.out.print("검색할 내용 : ");
 					String searchData = scan.nextLine();
 					searchList.add(searchData);
 					
-					addrList = db.searchAddress(addrList, searchList);
+					addrList = db.searchAddress(addrList, searchList);	// 검색
 					
+					System.out.println(prompt3);	// 정렬
+					int sortNum = scan.nextInt();
+					scan.nextLine();
+					addrList = db.sortAddress(addrList, sortNum);
+									
 					WebView mv2 = new WebView();	// 웹에서 출력
 					mv2.printAddr(addrList);
 					
@@ -120,32 +124,35 @@ public class AddrApp {
 					System.out.println(prompt2);
 					int answer2 = scan.nextInt();
 					scan.nextLine();
-				
-					if (answer2 == 0) {	// 처음으로
+					
+					// ---------------------------------------------------------------------------
+					
+					if (answer2 == 0) {				// 처음으로
 						System.out.println("처음으로 돌아갑니다.");
 						break; 
 						
-					} else if (answer2 == 2) {	// 전체검색
+					} else if (answer2 == 2) {		// 전체검색
 						searchList.clear();
 						
-					} else if (answer2 == 3) {	// 수정
-						if (searchNum == 1) {	// 검색결과가 1개뿐이면 바로 수정
+					} else if (answer2 == 3) {		// 수정
+						if (searchNum == 1) {	
 							db.updateAddress(addrList.get(0).getId());
-						} else {				// 검색결과가 여러개면 id 입력값 받아서 하나만 수정
+						} else {				
 							db.updateAddress();
 						}
 						
-					} else if (answer2 == 4) {	// 삭제
+					} else if (answer2 == 4) {		// 삭제
 						
-						if (searchNum == 1) {	// 검색결과가 한개뿐이면 바로삭제
+						if (searchNum == 1) {	
 							db.deleteAddress(addrList.get(0).getId());
 							break;
-						} else {				// 검색결과가 여러개면 id 입력값 받아서 삭제
+						} else {				
 							db.deleteAddress();	
 							System.out.println("처음으로 돌아갑니다.");
 							break;
 						}
-					}
+						
+					} 
 				} while (true);	// 결과 내 재검색
 			}
 			
@@ -166,30 +173,18 @@ public class AddrApp {
 				
 			}
 			
-			
 			else if (cmd.equals("9")) {			// csv 파일 생성
-				
-//				ArrayList<Addr> addrList = db.getAddress();
-//				DBtocsv filemaker = new DBtocsv();
-//				filemaker.makeCSV(addrList);
-				
-				
-				
-				
-				
-				
-				
+				ArrayList<Addr> addrList = db.getAddress();
+				DBtocsv filemaker = new DBtocsv();
+				filemaker.makeCSV(addrList);
+				System.out.println("test.csv 생성완료");
 			}
 			
-			
-			else {
+			else {								// 잘못 입력한 경우
 				System.out.println("다시 입력하세요.");
 			}
-			
-			
-			
-			
-			
 		}
 	}
 }
+
+//231212 10:32 편집
