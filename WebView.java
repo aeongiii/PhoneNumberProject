@@ -14,7 +14,10 @@ public class WebView {
 			System.out.println("이름 : " + addrList.get(i).getName());
 			System.out.println("주소 : " + addrList.get(i).getAddress());
 			System.out.println("번호 : " + addrList.get(i).getPhone());
-			System.out.println("-----------------------------------------");
+			System.out.println("회사 : " + addrList.get(i).getCompany());
+			System.out.println("직급 : " + addrList.get(i).getGrade());
+			System.out.println("부서 : " + addrList.get(i).getPart());
+			System.out.println("--------------------------------------------");
 		}
 	}
 }

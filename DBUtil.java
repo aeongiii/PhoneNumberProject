@@ -49,14 +49,14 @@ public class DBUtil {
 		return conn;
 	}
 	
-	public void insertAddress(String name, String address, String phone) {
+	public void insertAddress(String name, String address, String phone, String company, String grade, String part) {
 		// =================== DB 작업 ==================
 		// 3. Statement 생성
 		try {
 			stmt = conn.createStatement();
 			
 			// 4. SQL 처리하고 결과 ResultSet에 받아오기
-			String sql = "INSERT INTO phone (phone_NAME, phone_ADDRESS, phone_NUMBER) VALUES ('" + name + "', '" + address + "', '" + phone + "')";
+			String sql = "INSERT INTO phone (phone_NAME, phone_ADDRESS, phone_NUMBER, phone_COMPANY, phone_GRADE, phone_PART) VALUES ('" + name + "', '" + address + "', '" + phone + "', '" + company + "', '" + grade + "', '" + part + "')";
 			
 			// 조회 결과가 없는 경우에는 ResultSet으로 받아올게 없기 때문에 
 			// sql만 반영해주는 executeUpdate(sql) 사용
@@ -87,8 +87,11 @@ public class DBUtil {
 				String name = rs.getString("phone_NAME");
 				String address = rs.getString("phone_ADDRESS");
 				String phone = rs.getString("phone_NUMBER");
+				String company = rs.getString("phone_COMPANY");
+				String grade = rs.getString("phone_GRADE");
+				String part = rs.getString("phone_PART");
 				
-				Addr a1 = new Addr(id, name, address, phone);
+				Addr a1 = new Addr(id, name, address, phone, company, grade, part);
 				AddrList.add(a1);
 			}
 		} catch (Exception e) {
@@ -98,12 +101,12 @@ public class DBUtil {
 		return AddrList;
 	}
 		
-	public void updateAddress(int id, String name, String address, String phone) {
+	public void updateAddress(int id, String name, String address, String phone, String company, String grade, String part) {
 		// ================== DB 작업 ======================
 		try {
 			stmt = conn.createStatement();
 			
-			String sql = "UPDATE phone SET phone_name = '" + name + "', phone_ADDRESS = '" + address + "', phone_NUMBER = '" + phone + "' WHERE phone_ID = " + id;
+			String sql = "UPDATE phone SET phone_name = '" + name + "', phone_ADDRESS = '" + address + "', phone_NUMBER = '" + phone + "', phone_COMPANY = '" + company + "', phone_GRADE = '" + grade + "', phone_PART = '" + part + "' WHERE phone_ID = " + id;
 		
 			stmt.executeUpdate(sql);
 			System.out.println("주소록 수정 완료");
@@ -129,72 +132,7 @@ public class DBUtil {
 		}
 		// =================================================
 	}
-	
-	public ArrayList<Addr> searchAddress(String searchData) {
-		// =================================================
-		// 담아야하니까
-		ArrayList<Addr> AddrList = new ArrayList<>();
-		try {
-			stmt = conn.createStatement();
-			
-			String sql = "select * from phone where phone_NAME LIKE '%" + searchData + "%'"
-					+ "	OR phone_ADDRESS LIKE '%" + searchData + "%'"
-					+ " OR phone_NUMBER LIKE '%" + searchData + "%'";
-			
-			rs = stmt.executeQuery(sql);
-			
-			while (rs.next()) {
-				int id = rs.getInt("phone_ID");
-				String name = rs.getString("phone_NAME");
-				String address = rs.getString("phone_ADDRESS");
-				String phone = rs.getString("phone_NUMBER");
-				
-				Addr a1 = new Addr(id, name, address, phone);
-				AddrList.add(a1);
-			}
-			
-		} catch (Exception e) {
-			System.out.println("DB작업중 문제 발생: " + e.getMessage());
-			e.printStackTrace();
-		}
 		
-		return AddrList;
-		// =================================================
-	}
-	
-	
-	public ArrayList<Addr> searchAddress(String searchData, ArrayList<Addr> addrList) {
-		// =================================================
-		// 담아야하니까
-		
-		try {
-			stmt = conn.createStatement();
-			
-			String sql = "select * from phone where phone_NAME LIKE '%" + searchData + "%'"
-					+ "	OR phone_ADDRESS LIKE '%" + searchData + "%'"
-					+ " OR phone_NUMBER LIKE '%" + searchData + "%'";
-			
-			rs = stmt.executeQuery(sql);
-			
-			while (rs.next()) {
-				int id = rs.getInt("phone_ID");
-				String name = rs.getString("phone_NAME");
-				String address = rs.getString("phone_ADDRESS");
-				String phone = rs.getString("phone_NUMBER");
-				
-				Addr a1 = new Addr(id, name, address, phone);
-				addrList.add(a1);
-			}
-			
-		} catch (Exception e) {
-			System.out.println("DB작업중 문제 발생: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return addrList;
-		// =================================================
-	}
-	
 	public ArrayList<Addr> searchAddress(ArrayList<Addr> addrList, ArrayList<String> searchList ) {
 		// =================================================
 		
@@ -203,7 +141,7 @@ public class DBUtil {
 			sb.delete(0, sb.length());
 			sb.append("select * from phone where ");
 			for (int i=0; i<searchList.size(); i++) {
-				sb.append("(phone_NAME LIKE '%" + searchList.get(i) + "%' " + "OR phone_ADDRESS LIKE '%" + searchList.get(i) + "%' " + "OR phone_NUMBER LIKE '%" + searchList.get(i) + "%')");
+				sb.append("(phone_NAME LIKE '%" + searchList.get(i) + "%' " + "OR phone_ADDRESS LIKE '%" + searchList.get(i) + "%' " + "OR phone_NUMBER LIKE '%" + searchList.get(i) + "%' " + "OR phone_COMPANY LIKE '%" + searchList.get(i) + "%' "  + "OR phone_GRADE LIKE '%" + searchList.get(i) + "%' " + "OR phone_PART LIKE '%" + searchList.get(i) + "%')");
 				if (i != searchList.size()-1) {
 					sb.append(" AND ");
 				} else {
@@ -219,8 +157,11 @@ public class DBUtil {
 				String name = rs.getString("phone_NAME");
 				String address = rs.getString("phone_ADDRESS");
 				String phone = rs.getString("phone_NUMBER");
+				String company = rs.getString("phone_COMPANY");
+				String grade = rs.getString("phone_GRADE");
+				String part = rs.getString("phone_PART");
 				
-				Addr a1 = new Addr(id, name, address, phone);
+				Addr a1 = new Addr(id, name, address, phone, company, grade, part);
 				addrList.add(a1);
 			}
 			
@@ -234,8 +175,30 @@ public class DBUtil {
 	}
 	
 	
-	
-	
+	public void deleteAddress(ArrayList<Addr> addrList, String[] deletenum) {
+		// =================================================
+		try {
+			stmt = conn.createStatement();
+			sb.delete(0, sb.length());
+			sb.append("DELETE FROM phone WHERE ");
+			
+			for (int i=0; i<deletenum.length; i++) {
+				sb.append("phone_ID = " + deletenum[i]);
+				if (i != deletenum.length -1) {
+					sb.append(" OR ");
+				} else {
+					sb.append(";");
+				}
+			}
+			String sql = sb.toString();
+			stmt.executeUpdate(sql);
+			System.out.println("주소록 삭제 완료");
+		} catch (Exception e) {
+			System.out.println("DB작업중 문제 발생: " + e.getMessage());
+			e.printStackTrace();
+		}
+		// =================================================
+	}
 	
 	
 	
