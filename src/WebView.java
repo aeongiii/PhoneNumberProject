@@ -21,5 +21,3 @@ public class WebView {
 		}
 	}
 }
-
-//231212 10:32 편집

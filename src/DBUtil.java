@@ -109,6 +109,7 @@ public class DBUtil {
 			System.out.print("id : ");
 			int id = scan.nextInt();
 			scan.nextLine();
+			System.out.println("----- 정보 수정하기 -----");
 			System.out.print("이름 : ");
 			String name = scan.nextLine();
 			System.out.println("주소 : ");
@@ -137,7 +138,7 @@ public class DBUtil {
 	public void updateAddress(int id) {
 		// ================== DB 작업 ======================
 		try {
-			System.out.println("[ 입력하신 정보로 수정됩니다. ]");
+			System.out.println("[ 마지막 검색된 사원의 내용이 새로운 정보로 수정됩니다. ]");
 			System.out.print("이름 : ");
 			String name = scan.nextLine();
 			System.out.println("주소 : ");
@@ -209,10 +210,14 @@ public class DBUtil {
 	}
 	
 		
-	public ArrayList<Addr> searchAddress(ArrayList<Addr> addrList, ArrayList<String> searchList ) {
+	public ArrayList<Addr> searchAddress(ArrayList<Addr> addrList, ArrayList<String> searchList, int sortNum ) {
 		// =================================================
 		
 		try {
+			
+			
+			
+			
 			stmt = conn.createStatement();
 			sb.delete(0, sb.length());
 			sb.append("select * from phone where ");
@@ -220,11 +225,12 @@ public class DBUtil {
 				sb.append("(phone_NAME LIKE '%" + searchList.get(i) + "%' " + "OR phone_ADDRESS LIKE '%" + searchList.get(i) + "%' " + "OR phone_NUMBER LIKE '%" + searchList.get(i) + "%' " + "OR phone_COMPANY LIKE '%" + searchList.get(i) + "%' "  + "OR phone_GRADE LIKE '%" + searchList.get(i) + "%' " + "OR phone_PART LIKE '%" + searchList.get(i) + "%')");
 				if (i != searchList.size()-1) {
 					sb.append(" AND ");
-				} else {
-					sb.append(";");
 				}
 			}
-
+			
+			String orderby = sortAddress(addrList, sortNum);		// 정렬
+			sb.append(orderby);
+			
 			String sql = sb.toString();		// 쿼리문 완성하여 날리기
 			rs = stmt.executeQuery(sql);
 			
@@ -251,45 +257,39 @@ public class DBUtil {
 	}
 	
 
-	public ArrayList<Addr> sortAddress(ArrayList<Addr> addrList, int sortNum) {
-		String sql;
+	public String sortAddress(ArrayList<Addr> addrList, int sortNum) {
+		String sql = "";
 		
 		switch(sortNum) {
 			case (1):		// id 정렬
 				break;
 				
 			case (2):		// 이름 정렬
-				sql = "select * from phone ORDER BY phone_NAME;";
-				addrList = returnAddrList(sql);
+				sql = " ORDER BY phone_NAME;";
 				break;
 			
 			case (3):		// 주소 정렬
-				sql = "select * from phone ORDER BY phone_ADDRESS;";
-				addrList = returnAddrList(sql);
+				sql = " ORDER BY phone_ADDRESS;";
 				break;
 			
 			case (4):		// 전화번호 정렬
-				sql = "select * from phone ORDER BY phone_NUMBER;";
-				addrList = returnAddrList(sql);
+				sql = "ORDER BY phone_NUMBER;";
 				break;
 			
 			case (5):		// 회사 정렬
-				sql = "select * from phone ORDER BY phone_COMPANY;";
-				addrList = returnAddrList(sql);
+				sql = "ORDER BY phone_COMPANY;";
 				break;
 			
 			case (6):		// 직급 정렬
-				sql = "select * from phone ORDER BY phone_GRADE;";
-				addrList = returnAddrList(sql);
+				sql = "ORDER BY phone_GRADE;";
 				break;
 			
 			case (7):		// 부서 정렬
-				sql = "select * from phone ORDER BY phone_PART;";
-				addrList = returnAddrList(sql);
+				sql = "ORDER BY phone_PART;";
 				break;
 			
 		}
-		return addrList;
+		return sql;
 		
 	}
 	
@@ -301,7 +301,7 @@ public class DBUtil {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
-			System.out.println("============== 주소록 목록 ===============");
+//			System.out.println("============== 주소록 목록 ===============");
 			while (rs.next()) {
 				int id = rs.getInt("phone_ID");
 				String name = rs.getString("phone_NAME");
@@ -324,9 +324,3 @@ public class DBUtil {
 	
 	
 }
-
-
-
-//231212 10:32 편집
-
-

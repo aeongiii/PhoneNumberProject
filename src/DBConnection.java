@@ -10,7 +10,7 @@ public class DBConnection {
 		
 //		db.insertAddress("김에옹", "부산", "010-2222-3333");		// 주소록 추가
 //		db.updateAddress(7, "홍예은", "평양", "010-0000-1111");		// 주소록 수정
-//		db.deleteAddress(5);									// 주소록 삭제
+//		db.deleteAddress(5);		db 							// 주소록 삭제
 				
 //		ArrayList<Addr> AddList = db.getAddress();
 //		System.out.println(AddList);
@@ -18,6 +18,3 @@ public class DBConnection {
 //		System.out.println(AddList);
 	}
 }
-
-
-// 231212 10:32 편집

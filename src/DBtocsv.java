@@ -9,7 +9,8 @@ public class DBtocsv {
 	
 	
 	public void makeCSV(ArrayList<Addr> addrList) {
-		String filePath = "C:/works/dbConnection/test.csv";
+		String filePath = "C:/work/dbConnection/test.csv";
+//		String filePath = "C:/works/dbConnection/test.csv";
 		
 		File file = null;
 		BufferedWriter bw = null;
@@ -18,6 +19,7 @@ public class DBtocsv {
 		try {
 			file = new File(filePath);
 			bw = new BufferedWriter(new FileWriter(file));
+			bw.write("\uFEFF");			// UTF-8로 인코딩하기
 			String header = "phone_ID, phone_NAME, phone_ADDRESS, phone_NUMBER, phone_COMPANY, phone_GRADE, phone_PART";
 			bw.write(header + "\n");	// 쓰기
 			
@@ -41,5 +43,3 @@ public class DBtocsv {
 		} 
 	}
 }
-
-//231212 10:32 편집

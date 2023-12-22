@@ -108,12 +108,12 @@ public class AddrApp {
 					String searchData = scan.nextLine();
 					searchList.add(searchData);
 					
-					addrList = db.searchAddress(addrList, searchList);	// 검색
-					
-					System.out.println(prompt3);	// 정렬
+					System.out.println(prompt3);
 					int sortNum = scan.nextInt();
 					scan.nextLine();
-					addrList = db.sortAddress(addrList, sortNum);
+					
+					addrList = db.searchAddress(addrList, searchList, sortNum);	// 검색
+				
 									
 					WebView mv2 = new WebView();	// 웹에서 출력
 					mv2.printAddr(addrList);
@@ -186,5 +186,3 @@ public class AddrApp {
 		}
 	}
 }
-
-//231212 10:32 편집
